@@ -33,14 +33,20 @@ namespace CetToDoList.Controllers
 
             if (!String.IsNullOrWhiteSpace(searchModel.SearchText))
             {
+                if (searchModel.DesSearch)
+                {
+                    query = query.Where(t => t.Description.Contains(searchModel.SearchText));
+                }
                 if (searchModel.ShowAll)
                 {
                     query = query.Where(t => t.Catagory.Name.Contains(searchModel.SearchText));
+                    
 
                 }
                 else {
                     query = query.Where(t => t.Title.Contains(searchModel.SearchText));
                     query = query.Where(t => !t.IsCompleted);
+                    
                 }
                 
             }
