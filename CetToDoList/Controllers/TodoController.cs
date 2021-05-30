@@ -20,10 +20,36 @@ namespace CetToDoList.Controllers
         }
 
         // GET: Todo
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchViewModel searchModel)
         {
-            var applicationDbContext = _context.Todos.Include(t => t.Catagory).Where(t=>!t.IsCompleted).OrderBy(t=> t.DueDate);
-            return View(await applicationDbContext.ToListAsync());
+           
+            var query = _context.Todos.Include(t => t.Catagory).AsQueryable();
+            if (searchModel.ShowAll)
+            {
+                query = query.Where(t => !t.IsCompleted);
+                
+            }
+
+
+            if (!String.IsNullOrWhiteSpace(searchModel.SearchText))
+            {
+                if (searchModel.ShowAll)
+                {
+                    query = query.Where(t => t.Catagory.Name.Contains(searchModel.SearchText));
+
+                }
+                else {
+                    query = query.Where(t => t.Title.Contains(searchModel.SearchText));
+                    query = query.Where(t => !t.IsCompleted);
+                }
+                
+            }
+
+            query = query.OrderBy(t => t.DueDate);
+            searchModel.Result = await query.ToListAsync();
+
+
+            return View(searchModel);
         }
 
         // GET: Todo/Details/5
@@ -157,25 +183,25 @@ namespace CetToDoList.Controllers
             return _context.Todos.Any(e => e.Id == id);
         }
 
-        public async Task<IActionResult> Complete(int id)
+        public async Task<IActionResult> Complete(int id, bool showAll)
         {
-            return await Changestatus(id, true);
+            return await Changestatus(id, true, showAll);
 
         }
 
-        private async Task<IActionResult> Changestatus(int id, bool status)
+        private async Task<IActionResult> Changestatus(int id, bool status, bool CurrentShowAllValue)
         {
             var TodoItem = _context.Todos.FirstOrDefault(t => t.Id == id);
             if (TodoItem == null) return NotFound();
             TodoItem.IsCompleted = status;
             TodoItem.CompletedDate = DateTime.Now;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { showall = CurrentShowAllValue });
         }
 
-        public async Task<IActionResult> InComplete(int id)
+        public async Task<IActionResult> InComplete(int id, bool showAll)
         {
-            return await Changestatus(id, false);
+            return await Changestatus(id, false, showAll);
 
         }
     }

@@ -1,4 +1,4 @@
- @model IEnumerable<CetToDoList.Models.Todo>
+ @model SearchViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,33 +8,63 @@
 
 <p>
     <a asp-action="Create"> Add a new task</a>
+
 </p>
+<p>
+    @if (Model.ShowAll)
+    {
+    <a asp-action="Index" asp-route-showall="false"> Show All</a>
+    }
+    else
+    {
+<a asp-action="Index" asp-route-showall="true"> Show InCompleted</a>
+    }
+
+
+</p>
+
+<form asp-action="Index" asp-controller="Todo" method="get">
+    <div class="form-group">
+        <label asp-for="SearchText" class="control-label"></label>
+        <input asp-for="SearchText" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label asp-for="ShowAll" class="control-label"></label>
+        <input asp-for="ShowAll" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Catagory)
+                Catagory
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Title
             </th>
 
 
             <th>
-                @Html.DisplayNameFor(model => model.DueDate)
+                DueDate
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Remaininghour)
+               RemainingHour
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsCompleted)
+               IsCompleted
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Result) {
 
 
         <tr>
@@ -68,12 +98,12 @@
 
             <td>
                 @if (item.IsCompleted == true)
-                {<a asp-action="InComplete" asp-route-id="@item.Id">InComplete</a>}
+                {<a asp-action="InComplete" asp-route-id="@item.Id" asp-route-showAll="@Model.ShowAll">InComplete</a> }
                 else
-                { <a asp-action="Complete" asp-route-id="@item.Id">Complete</a>}
+                { <a asp-action="Complete" asp-route-id="@item.Id" asp-route-showAll="@Model.ShowAll">Complete</a>}
 
 
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

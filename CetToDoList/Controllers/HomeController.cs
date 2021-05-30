@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CetToDoList.Models;
+using CetToDoList.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CetToDoList.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext dbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext)
+
         {
             _logger = logger;
+            this.dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult>  Index()
         {
-            return View();
+            var query = dbContext.Todos.Include(t=> t.Catagory).Where(t => !t.IsCompleted).OrderBy(t => t.DueDate).Take(3);
+            List<Todo> result = await query.ToListAsync();
+            return View(result);
         }
 
         public IActionResult Privacy()
