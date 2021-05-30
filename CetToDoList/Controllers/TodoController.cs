@@ -22,7 +22,7 @@ namespace CetToDoList.Controllers
         // GET: Todo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Todos.Include(t => t.Catagory);
+            var applicationDbContext = _context.Todos.Include(t => t.Catagory).Where(t=>!t.IsCompleted).OrderBy(t=> t.DueDate);
             return View(await applicationDbContext.ToListAsync());
         }
 
