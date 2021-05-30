@@ -45,24 +45,25 @@ else
         {
 
 
-            <tr>
+        <tr>
 
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Catagory.Name)
-                </td>
 
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Remaininghour)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Catagory.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
 
 
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remaininghour)
+            </td>
+
+
+        </tr>
         }
     </tbody>
 </table>
