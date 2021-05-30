@@ -27,7 +27,7 @@ namespace CetToDoList.Models
         {
             get
             {
-                var RemainingTime = (DateTime.Now - DueDate);
+                var RemainingTime = ( DueDate- DateTime.Now);
                 return (int) RemainingTime.TotalHours;
 
              }

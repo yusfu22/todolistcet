@@ -1,54 +1,78 @@
-@model IEnumerable<CetToDoList.Models.Todo>
+ @model IEnumerable<CetToDoList.Models.Todo>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>To Do Jobs</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"> Add a new task</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Catagory)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCompleted)
-            </th>
+
+
             <th>
                 @Html.DisplayNameFor(model => model.DueDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Catagory)
+                @Html.DisplayNameFor(model => model.Remaininghour)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCompleted)
+            </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+
+
         <tr>
+            @if (item.IsCompleted == false)
+            {
+        <td>
+            @Html.DisplayFor(modelItem => item.Catagory.Name)
+        </td>
+        }
+        else
+        {
+        <td>
+            <del>@Html.DisplayFor(modelItem => item.Catagory.Name)</del>
+        </td>
+
+        }
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCompleted)
-            </td>
+
+
             <td>
                 @Html.DisplayFor(modelItem => item.DueDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Catagory.Id)
+                @Html.DisplayFor(modelItem => item.Remaininghour)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IsCompleted)
+            </td>
+
+            <td>
+                @if (item.IsCompleted == true)
+                {<a asp-action="InComplete" asp-route-id="@item.Id">InComplete</a>}
+                else
+                { <a asp-action="Complete" asp-route-id="@item.Id">Complete</a>}
+
+
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

@@ -156,5 +156,27 @@ namespace CetToDoList.Controllers
         {
             return _context.Todos.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Complete(int id)
+        {
+            return await Changestatus(id, true);
+
+        }
+
+        private async Task<IActionResult> Changestatus(int id, bool status)
+        {
+            var TodoItem = _context.Todos.FirstOrDefault(t => t.Id == id);
+            if (TodoItem == null) return NotFound();
+            TodoItem.IsCompleted = status;
+            TodoItem.CompletedDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> InComplete(int id)
+        {
+            return await Changestatus(id, false);
+
+        }
     }
 }
